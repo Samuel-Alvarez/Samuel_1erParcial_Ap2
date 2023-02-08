@@ -17,11 +17,11 @@ object AppModule {
     // TODO: Inyectar la base de datos 
 /*    @Singleton
     @Provides
-    fun providesDatabase(@ApplicationContext context: Context): RoomExpampleDb {
+    fun providesDatabase(@ApplicationContext context: Context): PrestamoDb {
         return Room.databaseBuilder(
             context,
-            RoomExpampleDb::class.java,
-            "RoomExample.db"
+            PrestamoDb::class.java,
+            "PrestamoDb"
         )
             .fallbackToDestructiveMigration()
             .build()
@@ -30,5 +30,5 @@ object AppModule {
     // TODO: Inyectar el DAO 
 /*    @Singleton
     @Provides
-    fun providesOcupacionDao(db: RoomExpampleDb) = db.ocupacionDao*/
+    fun providesPerstamoDao(db: PrestamoDb) = db.prestamoDao*/
 }
