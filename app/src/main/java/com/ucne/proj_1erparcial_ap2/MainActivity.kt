@@ -11,7 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.ucne.proj_1erparcial_ap2.ui.theme.Proj_1erParcial_Ap2Theme
-import com.ucne.proj_1erparcial_ap2.ui.theme.RegistroPerstamo.PrestamoScreen
+import com.ucne.proj_1erparcial_ap2.ui.RegistroPerstamo.PrestamoScreen
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
