@@ -15,61 +15,57 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 
-data class PrestamoUiState(
-    val prestamoList: List<PrestamoEntity> = emptyList()
+data class PrestamosUiState(
+    val prestamosList: List<PrestamoEntity> = emptyList()
 )
-
 @HiltViewModel
 class PrestamoViewModel @Inject constructor(
     private val prestamoRepository: PrestamoRepository
 ) : ViewModel() {
-    var Deudor by mutableStateOf("Anonimo")
-    var Concepto by mutableStateOf("Ingeniero")
-    var Monto by mutableStateOf("30000")
-
-    var conceptoError by mutableStateOf("")
-    var montoError by mutableStateOf("")
+    var deudor by mutableStateOf("")
     var deudorError by mutableStateOf("")
+    var concepto by mutableStateOf("")
+    var conceptoError by mutableStateOf("")
+    var monto by mutableStateOf("")
+    var montoError by mutableStateOf("")
 
-    var hayError = false
-
-    var uiState = MutableStateFlow(PrestamoUiState())
+    var uiState = MutableStateFlow(PrestamosUiState())
         private set
     init {
-        getListPrestamo()
+        getList()
     }
-    fun getListPrestamo() {
+    fun getList() {
         viewModelScope.launch(Dispatchers.IO) {
             prestamoRepository.getList().collect{lista ->
                 uiState.update {
-                    it.copy(prestamoList = lista)
+                    it.copy(prestamosList = lista)
                 }
             }
         }
     }
-
-    fun onDeudorChanged(Deudor: String) {
-        this.Deudor = Deudor
-        Validation()
+    fun onDeudorChanged(deudor: String) {
+        this.deudor = deudor
+        HayErrores()
     }
-    fun onMontoChanged(Monto: String) {
-        this.Monto = Monto
-        Validation()
+    fun onConceptoChanged(concepto: String){
+        this.concepto = concepto
+        HayErrores()
     }
 
-    fun onConceptoChanged(Concepto: String) {
-        this.Concepto = Concepto
-        Validation()
+    fun onMontoChanged(monto: String) {
+        this.monto = monto
+        HayErrores()
     }
 
     fun insertar() {
-        if (Validation())
+
+        if (HayErrores())
             return
 
         val prestamo = PrestamoEntity(
-            deudor = Deudor,
-            concepto = Concepto,
-            monto = Monto.toDoubleOrNull()?:0.0
+            deudor = deudor,
+            concepto = concepto,
+            monto = monto.toDoubleOrNull() ?: 0.0
         )
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -78,57 +74,30 @@ class PrestamoViewModel @Inject constructor(
         }
     }
 
-    fun eliminar() {
-        if (Validation())
-            return
-
-        val prestamo = PrestamoEntity(
-            deudor = Deudor,
-            concepto = Concepto,
-            monto = Monto.toDoubleOrNull()?:0.0
-        )
-
-        viewModelScope.launch(Dispatchers.IO) {
-            prestamoRepository.delete(prestamo)
-            Limpiar()
-        }
-    }
-
-    private fun Validation(): Boolean {
-
+    private fun HayErrores(): Boolean {
+        var hayError = false
         deudorError = ""
-
-        if (Deudor.isBlank()) {
+        if (deudor.isBlank()) {
             deudorError = "Debe indicar el deudor"
             hayError = true
-        }else{
-            hayError
         }
-
         conceptoError = ""
-
-        if (Concepto.isBlank()) {
+        if(concepto.isBlank()){
             conceptoError = "Debe indicar el concepto"
             hayError = true
-        }else{
-            hayError
         }
 
         montoError = ""
-
-        if ((Monto.toDoubleOrNull() ?: 0.0) <= 0.0) {
+        if ((monto.toDoubleOrNull() ?: 0.0) <= 0.0) {
             montoError = "Debe indicar un monto mayor que cero"
             hayError = true
-        }else{
-            hayError
         }
-
         return hayError
     }
 
-    fun Limpiar() {
-        Deudor.toString()?:null
-        Concepto.toString()?:null
-        Monto.toString()?:null
+    private fun Limpiar() {
+        deudor = ""
+        concepto = ""
+        monto =""
     }
 }

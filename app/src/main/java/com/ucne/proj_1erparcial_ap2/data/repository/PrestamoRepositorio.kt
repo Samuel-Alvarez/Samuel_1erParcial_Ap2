@@ -6,14 +6,12 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class PrestamoRepository @Inject constructor(
-    private  val prestamoDao: PrestamoDao
+    private val prestamoDao: PrestamoDao
 ) {
-    suspend fun insert(prestamo: PrestamoEntity) {
-        return prestamoDao.insert(prestamo)
+    suspend fun insert(deudor: PrestamoEntity){
+        return prestamoDao.insert(deudor)
     }
+    //suspend fun delete(deudor: PrestamoEntity) = prestamoDao.delete(deudor)
 
-    suspend fun delete(prestamo: PrestamoEntity) {
-        return prestamoDao.delete(prestamo)
-    }
     fun getList(): Flow<List<PrestamoEntity>> = prestamoDao.getList()
 }
