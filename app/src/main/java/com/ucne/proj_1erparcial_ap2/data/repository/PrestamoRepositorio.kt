@@ -11,9 +11,9 @@ class PrestamoRepository @Inject constructor(
     suspend fun insert(prestamo: PrestamoEntity) {
         return prestamoDao.insert(prestamo)
     }
-    suspend fun delete(prestamo: PrestamoEntity) = prestamoDao.delete(prestamo)
 
-    suspend fun find(prestamoId:Int) = prestamoDao.find(prestamoId)
-
+    suspend fun delete(prestamo: PrestamoEntity) {
+        return prestamoDao.delete(prestamo)
+    }
     fun getList(): Flow<List<PrestamoEntity>> = prestamoDao.getList()
 }
